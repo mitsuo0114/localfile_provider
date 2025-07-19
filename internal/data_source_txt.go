@@ -79,7 +79,7 @@ func (d *txtDataSource) Configure(_ context.Context, req datasource.ConfigureReq
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Provider Data Type",
-			"The provider data for local-file_txt data source must be a *FileClient.",
+			"The provider data for localfile_txt data source must be a *FileClient.",
 		)
 		return
 	}

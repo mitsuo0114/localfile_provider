@@ -14,6 +14,9 @@ import (
 	"path/filepath"
 )
 
+// ProviderTypeName is the Terraform provider type name.
+const ProviderTypeName = "localfile"
+
 // Compile-time assertion to ensure provider implementation satisfies
 // required interfaces.
 var _ provider.Provider = &localfileProvider{}
@@ -40,7 +43,7 @@ type providerModel struct {
 
 // Metadata sets the provider type name and version.
 func (p *localfileProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "local-file"
+	resp.TypeName = ProviderTypeName
 	resp.Version = p.version
 }
 
@@ -56,8 +59,8 @@ func (p *localfileProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 				Description: "Base directory for all file operations. Must be an existing directory.",
 			},
 		},
-		Description:         "The local-file provider manages simple text files and zip archives within a designated base directory.",
-		MarkdownDescription: "The local-file provider manages simple text files and zip archives within a designated base directory.",
+		Description:         "The localfile provider manages simple text files and zip archives within a designated base directory.",
+		MarkdownDescription: "The localfile provider manages simple text files and zip archives within a designated base directory.",
 	}
 }
 
@@ -89,7 +92,7 @@ func (p *localfileProvider) Configure(ctx context.Context, req provider.Configur
 		resp.Diagnostics.AddAttributeError(
 			path.Root("base_dir"),
 			"Missing base_dir",
-			"The base_dir must be specified for the local-file provider.",
+			"The base_dir must be specified for the localfile provider.",
 		)
 		return
 	}
@@ -127,13 +130,13 @@ func (p *localfileProvider) Configure(ctx context.Context, req provider.Configur
 	// on the HashiCorp logging tutorial, which recommends using
 	// tflog.SetField and tflog.Debug/Info around client creation【844297507211234†L343-L365】.
 	ctx = tflog.SetField(ctx, "local_file_base_dir", absDir)
-	tflog.Debug(ctx, "Configuring local-file provider")
+	tflog.Debug(ctx, "Configuring localfile provider")
 	// Initialize client
 	client := &FileClient{BaseDir: absDir}
 	// Expose client to resources and data sources
 	resp.DataSourceData = client
 	resp.ResourceData = client
-	tflog.Info(ctx, "Configured local-file provider", map[string]any{"success": true})
+	tflog.Info(ctx, "Configured localfile provider", map[string]any{"success": true})
 }
 
 // Resources returns the list of resource implementations supported by

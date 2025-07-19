@@ -10,20 +10,20 @@ import (
 )
 
 var testAccProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
-	"local-file": providerserver.NewProtocol6WithError(NewProvider("test")),
+	ProviderTypeName: providerserver.NewProtocol6WithError(NewProvider("test")),
 }
 
 func testAccTxtResourceConfig(baseDir, data string) string {
 	return fmt.Sprintf(`
-provider "local-file" {
+provider "%s" {
   base_dir = "%s"
 }
 
-resource "local-file_txt" "test" {
+resource "%s_txt" "test" {
   name = "acc.txt"
   data = "%s"
 }
-`, baseDir, data)
+`, ProviderTypeName, baseDir, ProviderTypeName, data)
 }
 
 func TestAccTxtResource_basic(t *testing.T) {
@@ -37,13 +37,13 @@ func TestAccTxtResource_basic(t *testing.T) {
 			{
 				Config: testAccTxtResourceConfig(tempDir, "hello"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("local-file_txt.test", "data", "hello"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("%s_txt.test", ProviderTypeName), "data", "hello"),
 				),
 			},
 			{
 				Config: testAccTxtResourceConfig(tempDir, "updated"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("local-file_txt.test", "data", "updated"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("%s_txt.test", ProviderTypeName), "data", "updated"),
 				),
 			},
 		},
@@ -52,19 +52,19 @@ func TestAccTxtResource_basic(t *testing.T) {
 
 func testAccTxtDataSourceConfig(baseDir string) string {
 	return fmt.Sprintf(`
-provider "local-file" {
+provider "%s" {
   base_dir = "%s"
 }
 
-resource "local-file_txt" "write" {
+resource "%s_txt" "write" {
   name = "data.txt"
   data = "from resource"
 }
 
-data "local-file_txt" "read" {
-  name = local-file_txt.write.name
+data "%s_txt" "read" {
+  name = %s_txt.write.name
 }
-`, baseDir)
+`, ProviderTypeName, baseDir, ProviderTypeName, ProviderTypeName, ProviderTypeName)
 }
 
 func TestAccTxtDataSource_basic(t *testing.T) {
@@ -78,8 +78,8 @@ func TestAccTxtDataSource_basic(t *testing.T) {
 			{
 				Config: testAccTxtDataSourceConfig(tempDir),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("data.local-file_txt.read", "data", "from resource"),
-					resource.TestCheckResourceAttr("local-file_txt.write", "data", "from resource"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("data.%s_txt.read", ProviderTypeName), "data", "from resource"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("%s_txt.write", ProviderTypeName), "data", "from resource"),
 				),
 			},
 		},
