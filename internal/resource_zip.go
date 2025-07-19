@@ -75,6 +75,7 @@ func (r *zipResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *
 			},
 			"location": schema.StringAttribute{
 				Optional:            true,
+				Computed:            true,
 				Description:         "Subdirectory within the base directory to place the zip archive.",
 				MarkdownDescription: "Subdirectory within the base directory to place the zip archive.",
 				Default:             stringdefault.StaticString(""),
