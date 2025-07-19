@@ -48,7 +48,7 @@ func (r *zipResource) Metadata(_ context.Context, req resource.MetadataRequest, 
 }
 
 // Schema defines the attributes for the zip resource.  The
-// src_data_file attribute should reference the ID of a local-file-txt
+// src_data_file attribute should reference the ID of a localfile-txt
 // resource (the absolute path to the file).  Name and location
 // determine where the zip file is written.  Changes to these
 // attributes require recreation.
@@ -63,8 +63,8 @@ func (r *zipResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *
 			},
 			"src_data_file": schema.StringAttribute{
 				Required:            true,
-				Description:         "Absolute path to the source file to include in the zip. Typically references a local-file-txt resource's id.",
-				MarkdownDescription: "Absolute path to the source file to include in the zip. Typically references a local-file-txt resource's id.",
+				Description:         "Absolute path to the source file to include in the zip. Typically references a localfile-txt resource's id.",
+				MarkdownDescription: "Absolute path to the source file to include in the zip. Typically references a localfile-txt resource's id.",
 				PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 			"name": schema.StringAttribute{
@@ -95,7 +95,7 @@ func (r *zipResource) Configure(_ context.Context, req resource.ConfigureRequest
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Provider Data Type",
-			"The provider data for local-file_onefile_zip must be a *FileClient.",
+			"The provider data for localfile_onefile_zip must be a *FileClient.",
 		)
 		return
 	}

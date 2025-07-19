@@ -96,7 +96,7 @@ func (r *txtResource) Configure(_ context.Context, req resource.ConfigureRequest
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Provider Data Type",
-			"The provider data for local-file_txt must be a *FileClient.",
+			"The provider data for localfile_txt must be a *FileClient.",
 		)
 		return
 	}
